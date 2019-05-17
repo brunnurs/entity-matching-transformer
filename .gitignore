@@ -1,0 +1,6 @@
+**/pre_trained_model/
+**/experiments/
+
+.idea/
+
+/src/__pycache__/
