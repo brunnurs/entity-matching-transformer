@@ -2,6 +2,10 @@ import logging
 
 from tqdm import tqdm, trange
 
+from logging_customized import setup_logging
+
+setup_logging()
+
 
 class Training:
 

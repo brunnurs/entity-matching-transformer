@@ -1,7 +1,9 @@
 import logging
 
+from logging_customized import setup_logging
 from src.data_representation import InputFeatures
 
+setup_logging()
 
 def _truncate_seq_pair(tokens_a, tokens_b, max_length):
     """Truncates a sequence pair in place to the maximum length."""

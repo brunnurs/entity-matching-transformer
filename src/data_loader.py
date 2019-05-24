@@ -3,9 +3,11 @@ from enum import Enum
 import torch
 from torch.utils.data import TensorDataset, RandomSampler, DataLoader, SequentialSampler
 
+from logging_customized import setup_logging
 from src.feature_extraction import convert_examples_to_features
 import logging
 
+setup_logging()
 
 class DataType(Enum):
     TRAINING = "Training"

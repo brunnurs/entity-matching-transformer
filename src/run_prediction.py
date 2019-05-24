@@ -3,17 +3,20 @@ import logging
 from pytorch_pretrained_bert import BertTokenizer
 from sklearn.metrics import classification_report
 
+from data_representation import DeepMatcherProcessor
+from logging_customized import setup_logging
 from src.TorchInitializer import TorchInitializer
 from src.config import Config
 from src.data_loader import load_data, DataType
-from src.data_representation import Sst2Processor
 from src.model import load_saved_model
 from src.prediction import predict
+
+setup_logging()
 
 if __name__ == "__main__":
     device, n_gpu = TorchInitializer().initialize_gpu_seed(Config.SEED)
 
-    processor = Sst2Processor()
+    processor = DeepMatcherProcessor()
     label_list = processor.get_labels()
 
     logging.info("Predict with {} labels: {}".format(len(label_list), label_list))

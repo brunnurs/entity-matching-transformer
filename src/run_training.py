@@ -2,18 +2,19 @@ import logging
 import os
 import time
 
-import torch
 from pytorch_pretrained_bert import BertTokenizer
-from pytorch_pretrained_bert.modeling import WEIGHTS_NAME, CONFIG_NAME
 
+from logging_customized import setup_logging
 from src.TorchInitializer import TorchInitializer
 from src.config import Config
-from src import Training
-from src.data_representation import QqpProcessor
-from src.evaluation import Evaluation
 from src.data_loader import load_data, DataType
+from src.data_representation import DeepMatcherProcessor
+from src.evaluation import Evaluation
 from src.model import get_pretrained_model, save_model
 from src.optimizer import build_optimizer
+from training import Training
+
+setup_logging()
 
 
 def create_experiment_folder():
@@ -31,7 +32,7 @@ if __name__ == "__main__":
 
     device, n_gpu = TorchInitializer().initialize_gpu_seed(Config.SEED)
 
-    processor = QqpProcessor()
+    processor = DeepMatcherProcessor()
     label_list = processor.get_labels()
 
     logging.info("training with {} labels: {}".format(len(label_list), label_list))

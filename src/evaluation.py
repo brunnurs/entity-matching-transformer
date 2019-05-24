@@ -4,8 +4,10 @@ import os
 import torch
 from tqdm import tqdm
 
+from logging_customized import setup_logging
 from src.metrics import accuracy
 
+setup_logging()
 
 class Evaluation:
 

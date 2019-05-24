@@ -3,6 +3,10 @@ import numpy as np
 import torch
 import logging
 
+from logging_customized import setup_logging
+
+setup_logging()
+
 
 class TorchInitializer:
     def initialize_gpu_seed(self, seed: int):
