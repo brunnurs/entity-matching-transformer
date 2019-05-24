@@ -1,10 +1,11 @@
-**/train.tsv
-**/dev.tsv
-**/test.tsv
+train.tsv
+dev.tsv
+test.tsv
 
 **/pre_trained_model/
 **/experiments/
 
 .idea/
+.ipynb_checkpoints
 
 /src/__pycache__/
