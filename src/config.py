@@ -2,7 +2,7 @@ import os
 
 
 class Config:
-    DATA_DIR = "data/QQP"
+    DATA_DIR = "data/abt_buy"
     PRE_TRAINED_MODEL_DIR = "pre_trained_model"
     PRE_TRAINED_MODEL_CACHE_DIR = "Currently not used"
     PRE_TRAINED_MODEL_BERT_BASE_UNCASED = os.path.join(PRE_TRAINED_MODEL_DIR, "bert-base-uncased")
