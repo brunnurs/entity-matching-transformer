@@ -54,11 +54,12 @@ if __name__ == "__main__":
     eval_examples = processor.get_dev_examples(Config.DATA_DIR)
     evaluation_data_loader = load_data(eval_examples, label_list, tokenizer, Config.MAX_SEQ_LENGTH, Config.EVAL_BATCH_SIZE, DataType.EVALUATION)
 
-    evaluation = Evaluation(evaluation_data_loader, exp_name, Config.MODEL_OUTPUT_DIR)
+    evaluation = Evaluation(evaluation_data_loader, exp_name, Config.MODEL_OUTPUT_DIR, len(label_list))
     logging.info("loaded and initialized evaluation examples {}".format(len(eval_examples)))
 
     training = Training()
     training_data_loader = load_data(train_examples, label_list, tokenizer, Config.MAX_SEQ_LENGTH, Config.TRAIN_BATCH_SIZE, DataType.TRAINING)
+
     training.fit(device, training_data_loader, model, optimizer, evaluation, Config.NUM_EPOCHS)
 
     save_model(model, exp_name, Config.MODEL_OUTPUT_DIR)

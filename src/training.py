@@ -38,5 +38,4 @@ class Training:
                 global_step += 1
 
             tqdm.write('Loss after epoc {}'.format(tr_loss / nb_tr_steps))
-            tqdm.write('Eval after epoc {}'.format(i_ + 1))
-            evaluation.evaluate(model, device)
+            evaluation.evaluate(model, device, i_)
