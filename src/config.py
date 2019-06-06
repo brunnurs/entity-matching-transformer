@@ -42,6 +42,8 @@ class Config(Singleton):
     SEED = 42
     LOSS_SCALE = 128
 
+    DATA_PROCESSOR = "DeepMatcherProcessor"
+
     @classmethod
     def dump_config_to_json_file(cls, experiment_name):
         config_path = os.path.join(cls.MODEL_OUTPUT_DIR, experiment_name, "config.json")
@@ -59,6 +61,7 @@ class Config(Singleton):
         parser.add_argument('--train_batch_size', action="store", dest="TRAIN_BATCH_SIZE", type=int)
         parser.add_argument('--eval_batch_size', action="store", dest="EVAL_BATCH_SIZE", type=int)
         parser.add_argument('--num_epochs', action="store", dest="NUM_EPOCHS", type=float)
+        parser.add_argument('--data_processor', action="store", dest="DATA_PROCESSOR", type=str)
 
         results = parser.parse_args()
 
