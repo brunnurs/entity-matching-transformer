@@ -9,6 +9,7 @@ import logging
 
 setup_logging()
 
+
 class DataType(Enum):
     TRAINING = "Training"
     EVALUATION = "Evaluation"

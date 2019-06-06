@@ -26,15 +26,18 @@ def convert_deepmatcher_structure(filename_matches: str, filename_table_a: str,
         writer.writerow([C.INDEX_KEY, C.TEXT_LEFT, C.TEXT_RIGHT, C.LABEL])
 
         for idx, line in enumerate(reader):
-            left = df_table_a.iloc[int(line['ltable_id'])]
-            right = df_table_b.iloc[int(line['rtable_id'])]
+            # find the row in tableA and tableB which contain the actual values. Make sure both keys have the same data type (we use string comparison as keys can be strings)
+            # As there should only exist one row per id, we use iloc (which returns a data series)
+            left = df_table_a.loc[df_table_a['id'].astype(str) == line['ltable_id']].iloc[0]
+            right = df_table_b.loc[df_table_b['id'].astype(str) == line['rtable_id']].iloc[0]
 
+            # which attributes we join is depending on the dataset
             left_joined_attributes = fun_join_left(left)
             right_joined_attributes = fun_join_right(right)
 
             writer.writerow([idx, left_joined_attributes, right_joined_attributes, line['label']])
 
-    logging.info("Created new tsv for abt_buy. Filename: {}".format(filename_destination))
+    logging.info("Created new tsv. Filename: {}".format(filename_destination))
 
 
 def abt_buy_join_left(row: pd.Series):
@@ -81,7 +84,7 @@ if __name__ == "__main__":
                                       os.path.join(Config.DATA_DIR, "deep_matcher", "tableA.csv"),
                                       os.path.join(Config.DATA_DIR, "deep_matcher", "tableB.csv"),
                                       os.path.join(Config.DATA_DIR, "train.tsv"),
-                                      company_join(), company_join)
+                                      company_join, company_join)
 
         convert_deepmatcher_structure(os.path.join(Config.DATA_DIR, "deep_matcher", "test.csv"),
                                       os.path.join(Config.DATA_DIR, "deep_matcher", "tableA.csv"),
