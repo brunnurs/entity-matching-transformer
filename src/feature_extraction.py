@@ -10,9 +10,9 @@ def _truncate_seq_pair(id, tokens_a, tokens_b, max_length):
     """Truncates a sequence pair in place to the maximum length."""
 
     if len(tokens_a) + len(tokens_b) > max_length:
-        logging.warning("Sample with ID '{}' was too long (tokens_a:{}, tokens_b:{}). "
-                        "Max_seq_length is {}, so we reduce it in a smart way".format(id, len(tokens_a), len(tokens_b),
-                                                                                      max_length))
+        logging.debug("Sample with ID '{}' was too long (tokens_a:{}, tokens_b:{}). "
+                      "Max_seq_length is {}, so we reduce it in a smart way".format(id, len(tokens_a), len(tokens_b),
+                                                                                    max_length))
 
     # This is a simple heuristic which will always truncate the longer sequence
     # one token at a time. This makes more sense than truncating an equal percent

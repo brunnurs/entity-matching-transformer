@@ -17,11 +17,13 @@ class DataType(Enum):
 
 
 def load_data(examples, label_list, tokenizer, max_seq_length, batch_size, data_type: DataType):
+    logging.info("***** Convert Data to Features (Word-Piece Tokenizing) *****".format(data_type))
     features = convert_examples_to_features(examples, label_list, max_seq_length, tokenizer)
 
     logging.info("***** Load Data for {}*****".format(data_type))
     logging.info("  Num examples = %d", len(examples))
     logging.info("  Batch size = %d", batch_size)
+    logging.info("  Max Sequence Length = %d", max_seq_length)
     all_input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     all_input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
     all_segment_ids = torch.tensor([f.segment_ids for f in features], dtype=torch.long)

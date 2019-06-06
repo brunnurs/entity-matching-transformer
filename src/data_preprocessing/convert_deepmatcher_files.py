@@ -60,40 +60,40 @@ def company_join(row: pd.Series):
 
 if __name__ == "__main__":
 
-    if Config.DATA_DIR.endswith("abt_buy"):
-        convert_deepmatcher_structure(os.path.join(Config.DATA_DIR, "deep_matcher", "train.csv"),
-                                      os.path.join(Config.DATA_DIR, "deep_matcher", "tableA.csv"),
-                                      os.path.join(Config.DATA_DIR, "deep_matcher", "tableB.csv"),
-                                      os.path.join(Config.DATA_DIR, "train.tsv"),
+    if Config().DATA_DIR.endswith("abt_buy"):
+        convert_deepmatcher_structure(os.path.join(Config().DATA_DIR, "deep_matcher", "train.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableA.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableB.csv"),
+                                      os.path.join(Config().DATA_DIR, "train.tsv"),
                                       abt_buy_join_left, abt_buy_join_right)
 
-        convert_deepmatcher_structure(os.path.join(Config.DATA_DIR, "deep_matcher", "test.csv"),
-                                      os.path.join(Config.DATA_DIR, "deep_matcher", "tableA.csv"),
-                                      os.path.join(Config.DATA_DIR, "deep_matcher", "tableB.csv"),
-                                      os.path.join(Config.DATA_DIR, "test.tsv"),
+        convert_deepmatcher_structure(os.path.join(Config().DATA_DIR, "deep_matcher", "test.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableA.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableB.csv"),
+                                      os.path.join(Config().DATA_DIR, "test.tsv"),
                                       abt_buy_join_left, abt_buy_join_right)
 
-        convert_deepmatcher_structure(os.path.join(Config.DATA_DIR, "deep_matcher", "valid.csv"),
-                                      os.path.join(Config.DATA_DIR, "deep_matcher", "tableA.csv"),
-                                      os.path.join(Config.DATA_DIR, "deep_matcher", "tableB.csv"),
-                                      os.path.join(Config.DATA_DIR, "dev.tsv"),
+        convert_deepmatcher_structure(os.path.join(Config().DATA_DIR, "deep_matcher", "valid.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableA.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableB.csv"),
+                                      os.path.join(Config().DATA_DIR, "dev.tsv"),
                                       abt_buy_join_left, abt_buy_join_right)
 
-    if Config.DATA_DIR.endswith("company"):
-        convert_deepmatcher_structure(os.path.join(Config.DATA_DIR, "deep_matcher", "train.csv"),
-                                      os.path.join(Config.DATA_DIR, "deep_matcher", "tableA.csv"),
-                                      os.path.join(Config.DATA_DIR, "deep_matcher", "tableB.csv"),
-                                      os.path.join(Config.DATA_DIR, "train.tsv"),
+    if Config().DATA_DIR.endswith("company"):
+        convert_deepmatcher_structure(os.path.join(Config().DATA_DIR, "deep_matcher", "train.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableA.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableB.csv"),
+                                      os.path.join(Config().DATA_DIR, "train.tsv"),
                                       company_join, company_join)
 
-        convert_deepmatcher_structure(os.path.join(Config.DATA_DIR, "deep_matcher", "test.csv"),
-                                      os.path.join(Config.DATA_DIR, "deep_matcher", "tableA.csv"),
-                                      os.path.join(Config.DATA_DIR, "deep_matcher", "tableB.csv"),
-                                      os.path.join(Config.DATA_DIR, "test.tsv"),
+        convert_deepmatcher_structure(os.path.join(Config().DATA_DIR, "deep_matcher", "test.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableA.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableB.csv"),
+                                      os.path.join(Config().DATA_DIR, "test.tsv"),
                                       company_join, company_join)
 
-        convert_deepmatcher_structure(os.path.join(Config.DATA_DIR, "deep_matcher", "valid.csv"),
-                                      os.path.join(Config.DATA_DIR, "deep_matcher", "tableA.csv"),
-                                      os.path.join(Config.DATA_DIR, "deep_matcher", "tableB.csv"),
-                                      os.path.join(Config.DATA_DIR, "dev.tsv"),
+        convert_deepmatcher_structure(os.path.join(Config().DATA_DIR, "deep_matcher", "valid.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableA.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableB.csv"),
+                                      os.path.join(Config().DATA_DIR, "dev.tsv"),
                                       company_join, company_join)
