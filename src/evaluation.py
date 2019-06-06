@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 import torch
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, f1_score
 from torch.nn import CrossEntropyLoss
 from tqdm import tqdm
 
@@ -52,9 +52,11 @@ class Evaluation:
         # remember, the logits are simply the output from the last layer, without applying an activation function (e.g. sigmoid).
         # for a simple classification this is also not necessary, we just take the index of the neuron with the maximal output.
         predicted_class = np.argmax(all_logits, axis=1)
+        f1 = f1_score(all_label_ids, predicted_class)
         report = classification_report(all_label_ids, predicted_class)
 
-        result = {'eval_loss': eval_loss}
+        result = {'eval_loss': eval_loss,
+                  'f1_score': f1}
 
         with open(self.output_path, "a+") as writer:
             tqdm.write("***** Eval results after epoch {} *****".format(epoch))
