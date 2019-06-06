@@ -5,8 +5,14 @@ from src.data_representation import InputFeatures
 
 setup_logging()
 
-def _truncate_seq_pair(tokens_a, tokens_b, max_length):
+
+def _truncate_seq_pair(id, tokens_a, tokens_b, max_length):
     """Truncates a sequence pair in place to the maximum length."""
+
+    if len(tokens_a) + len(tokens_b) > max_length:
+        logging.warning("Sample with ID '{}' was too long (tokens_a:{}, tokens_b:{}). "
+                        "Max_seq_length is {}, so we reduce it in a smart way".format(id, len(tokens_a), len(tokens_b),
+                                                                                      max_length))
 
     # This is a simple heuristic which will always truncate the longer sequence
     # one token at a time. This makes more sense than truncating an equal percent
@@ -39,12 +45,12 @@ def convert_examples_to_features(examples, label_list, max_seq_length, tokenizer
             # Modifies `tokens_a` and `tokens_b` in place so that the total
             # length is less than the specified length.
             # Account for [CLS], [SEP], [SEP] with "- 3"
-            _truncate_seq_pair(tokens_a, tokens_b, max_seq_length - 3)
+            _truncate_seq_pair(example.guid, tokens_a, tokens_b, max_seq_length - 3)
         else:
             # Account for [CLS] and [SEP] with "- 2"
             if len(tokens_a) > max_seq_length - 2:
                 logging.warning("Sample with ID '{}' was too long ({} + 2 tokens). Max_seq_length is {}, so we reduced "
-                             "the sentence to that".format(example.guid, len(tokens_a), max_seq_length))
+                                "the sentence to that".format(example.guid, len(tokens_a), max_seq_length))
                 tokens_a = tokens_a[:(max_seq_length - 2)]
 
         # The convention in BERT is:
@@ -106,4 +112,3 @@ def convert_examples_to_features(examples, label_list, max_seq_length, tokenizer
                           segment_ids=segment_ids,
                           label_id=label_id))
     return features
-
