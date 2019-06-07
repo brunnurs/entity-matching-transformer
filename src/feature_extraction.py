@@ -95,16 +95,16 @@ def convert_examples_to_features(examples, label_list, max_seq_length, tokenizer
         assert len(segment_ids) == max_seq_length
 
         label_id = label_map[example.label]
-        if ex_index < 5:
-            logging.debug("*** Example ***")
-            logging.debug("guid: %s" % (example.guid))
-            logging.debug("tokens: %s" % " ".join(
+        if ex_index < 3:
+            logging.info("*** Example ***")
+            logging.info("guid: %s" % (example.guid))
+            logging.info("tokens: %s" % " ".join(
                 [str(x) for x in tokens]))
-            logging.debug("input_ids: %s" % " ".join([str(x) for x in input_ids]))
-            logging.debug("input_mask: %s" % " ".join([str(x) for x in input_mask]))
-            logging.debug(
+            logging.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
+            logging.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
+            logging.info(
                 "segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
-            logging.debug("label: %s (id = %d)" % (example.label, label_id))
+            logging.info("label: %s (id = %d)" % (example.label, label_id))
 
         features.append(
             InputFeatures(input_ids=input_ids,
