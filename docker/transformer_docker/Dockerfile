@@ -1,6 +1,6 @@
 FROM pytorch/pytorch:latest
 
-RUN pip install pytorch-pretrained-bert
+RUN pip install pytorch-transformers
 RUN pip install pandas
 RUN pip install scikit-learn
 RUN pip install imbalanced-learn

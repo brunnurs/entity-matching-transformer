@@ -33,7 +33,8 @@ class Evaluation:
             label_ids = label_ids.to(device)
 
             with torch.no_grad():
-                logits = model(input_ids, segment_ids, input_mask, labels=None)
+                outputs = model(input_ids, segment_ids, input_mask, labels=None)
+                logits = outputs[1]
 
                 loss_fct = CrossEntropyLoss()
                 tmp_eval_loss = loss_fct(logits.view(-1, self.n_labels), label_ids.view(-1))

@@ -2,7 +2,7 @@ import logging
 import os
 import time
 
-from pytorch_pretrained_bert import BertTokenizer
+from pytorch_transformers import BertTokenizer
 
 from config import Config
 from logging_customized import setup_logging
@@ -51,13 +51,13 @@ if __name__ == "__main__":
     train_examples = processor.get_train_examples(Config().DATA_DIR)
     logging.info("loaded {} training examples".format(len(train_examples)))
 
-    model = get_pretrained_model(Config().PRE_TRAINED_MODEL_BERT_BASE_UNCASED, len(label_list), Config().PRE_TRAINED_MODEL_CACHE_DIR)
+    model = get_pretrained_model(Config().PRE_TRAINED_MODEL_BERT_BASE_UNCASED)
     model.to(device)
     logging.info("initialized BERT-model")
 
     num_train_steps = int(len(train_examples) / Config().TRAIN_BATCH_SIZE) * Config().NUM_EPOCHS
 
-    optimizer = build_optimizer(model, num_train_steps, Config().LEARNING_RATE, Config().WARMUP_PROPORTION, Config().WEIGHT_DECAY)
+    optimizer, scheduler = build_optimizer(model, num_train_steps, Config().LEARNING_RATE, Config().ADAM_EPS, Config().WARMUP_STEPS, Config().WEIGHT_DECAY)
     logging.info("Built optimizer: {}".format(optimizer))
 
     eval_examples = processor.get_dev_examples(Config().DATA_DIR)
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     training = Training()
     training_data_loader = load_data(train_examples, label_list, tokenizer, Config().MAX_SEQ_LENGTH, Config().TRAIN_BATCH_SIZE, DataType.TRAINING)
 
-    training.fit(device, training_data_loader, model, optimizer, evaluation, Config().NUM_EPOCHS)
+    training.fit(device, training_data_loader, model, optimizer, scheduler, evaluation, Config().NUM_EPOCHS, Config().MAX_GRAD_NORM)
 
     save_model(model, exp_name, Config().MODEL_OUTPUT_DIR)
 

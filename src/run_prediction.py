@@ -1,6 +1,6 @@
 import logging
 
-from pytorch_pretrained_bert import BertTokenizer
+from pytorch_transformers import BertTokenizer
 from sklearn.metrics import classification_report
 
 from config import Config

@@ -1,7 +1,7 @@
-from pytorch_pretrained_bert import BertAdam
+from pytorch_transformers import AdamW, WarmupLinearSchedule
 
 
-def build_optimizer(model, num_train_steps, learning_rate, warmup_proportion, weight_decay):
+def build_optimizer(model, num_train_steps, learning_rate, adam_eps, warmup_steps, weight_decay):
     # Prepare optimizer
     param_optimizer = list(model.named_parameters())
     no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
@@ -10,9 +10,7 @@ def build_optimizer(model, num_train_steps, learning_rate, warmup_proportion, we
         {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
     ]
 
-    optimizer = BertAdam(optimizer_grouped_parameters,
-                         lr=learning_rate,
-                         warmup=warmup_proportion,
-                         t_total=num_train_steps)
+    optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate, eps=adam_eps)
+    scheduler = WarmupLinearSchedule(optimizer, warmup_steps=warmup_steps, t_total=num_train_steps)
 
-    return optimizer
+    return optimizer, scheduler

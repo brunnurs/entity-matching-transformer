@@ -1,19 +1,11 @@
 import os
 import torch
 
-from pytorch_pretrained_bert.modeling import BertForSequenceClassification, WEIGHTS_NAME, CONFIG_NAME
+from pytorch_transformers.modeling_bert import BertForSequenceClassification, WEIGHTS_NAME, CONFIG_NAME
 
 
-def get_pretrained_model(model_path, num_labels, cache_dir, model_state_dict=None):
-    if model_state_dict:
-        model = BertForSequenceClassification.from_pretrained(model_path,
-                                                              num_labels=num_labels,
-                                                              state_dict=model_state_dict)
-    else:
-        model = BertForSequenceClassification.from_pretrained(model_path,
-                                                              cache_dir=cache_dir,
-                                                              num_labels=num_labels)
-    return model
+def get_pretrained_model(model_path):
+    return BertForSequenceClassification.from_pretrained(model_path)
 
 
 def save_model(model, experiment_name, model_output_dir):

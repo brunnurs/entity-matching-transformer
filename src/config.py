@@ -26,7 +26,6 @@ class Singleton(object):
 class Config(Singleton):
     DATA_DIR = "data/abt_buy"
     PRE_TRAINED_MODEL_DIR = "pre_trained_model"
-    PRE_TRAINED_MODEL_CACHE_DIR = "Currently not used"
     PRE_TRAINED_MODEL_BERT_BASE_UNCASED = os.path.join(PRE_TRAINED_MODEL_DIR, "bert-base-uncased")
     MODEL_OUTPUT_DIR = "experiments"
     MODEL_NAME = "ABT_BUY"
@@ -35,10 +34,13 @@ class Config(Singleton):
     DO_LOWER_CASE = True
     TRAIN_BATCH_SIZE = 16
     EVAL_BATCH_SIZE = 16
-    LEARNING_RATE = 2e-5
+    LEARNING_RATE = 1e-3
+    ADAM_EPS = 1e-6
+    WARMUP_STEPS = 0
+    MAX_GRAD_NORM = 1.0
+    WEIGHT_DECAY = 0.0
+
     NUM_EPOCHS = 30.0
-    WARMUP_PROPORTION = 0.1
-    WEIGHT_DECAY = 0.1
     SEED = 42
     LOSS_SCALE = 128
 
