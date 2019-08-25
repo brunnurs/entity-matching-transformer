@@ -34,7 +34,8 @@ class Evaluation:
 
             with torch.no_grad():
                 outputs = model(input_ids, segment_ids, input_mask, labels=None)
-                logits = outputs[1]
+                logits = outputs[0]  # logits are always part of the output (see BertForSequenceClassification documentation),
+                # while loss is only available if labels are provided. Therefore the logits are here to find on first position.
 
                 loss_fct = CrossEntropyLoss()
                 tmp_eval_loss = loss_fct(logits.view(-1, self.n_labels), label_ids.view(-1))
