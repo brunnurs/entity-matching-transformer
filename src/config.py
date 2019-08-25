@@ -24,7 +24,7 @@ class Singleton(object):
 
 
 class Config(Singleton):
-    DATA_DIR = "data/abt_buy"
+    DATA_DIR = "data/company"
     PRE_TRAINED_MODEL_DIR = "pre_trained_model"
     PRE_TRAINED_MODEL_BERT_BASE_UNCASED = os.path.join(PRE_TRAINED_MODEL_DIR, "bert-base-uncased")
     MODEL_OUTPUT_DIR = "experiments"

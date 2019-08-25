@@ -23,6 +23,6 @@ def write_first_n_lines_of_file(path_src, path_dest, n_lines):
 
 
 if __name__ == "__main__":
-    write_first_n_lines_of_file("data/company/deep_matcher/train.large.csv", "data/company/deep_matcher/train.csv", 1000)
-    write_first_n_lines_of_file("data/company/deep_matcher/test.large.csv", "data/company/deep_matcher/test.csv", 1000)
-    write_first_n_lines_of_file("data/company/deep_matcher/valid.large.csv", "data/company/deep_matcher/valid.csv", 1000)
+    write_first_n_lines_of_file("data/company/deep_matcher/train.large.csv", "data/company/deep_matcher/train.csv", 10)
+    write_first_n_lines_of_file("data/company/deep_matcher/test.large.csv", "data/company/deep_matcher/test.csv", 10)
+    write_first_n_lines_of_file("data/company/deep_matcher/valid.large.csv", "data/company/deep_matcher/valid.csv", 10)
