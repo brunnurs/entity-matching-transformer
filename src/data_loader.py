@@ -18,7 +18,12 @@ class DataType(Enum):
 
 def load_data(examples, label_list, tokenizer, max_seq_length, batch_size, data_type: DataType):
     logging.info("***** Convert Data to Features (Word-Piece Tokenizing) *****".format(data_type))
-    features = convert_examples_to_features(examples, label_list, max_seq_length, tokenizer)
+    features = convert_examples_to_features(examples,
+                                            label_list,
+                                            max_seq_length,
+                                            tokenizer,
+                                            output_mode="classification",
+                                            cls_token_segment_id=0)
 
     logging.info("***** Load Data for {}*****".format(data_type))
     logging.info("  Num examples = %d", len(examples))
@@ -27,8 +32,8 @@ def load_data(examples, label_list, tokenizer, max_seq_length, batch_size, data_
     all_input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     all_input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
     all_segment_ids = torch.tensor([f.segment_ids for f in features], dtype=torch.long)
-    all_label_id = torch.tensor([f.label_id for f in features], dtype=torch.long)
-    data = TensorDataset(all_input_ids, all_input_mask, all_segment_ids, all_label_id)
+    all_label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
+    data = TensorDataset(all_input_ids, all_input_mask, all_segment_ids, all_label_ids)
 
     if data_type == DataType.TRAINING:
         sampler = RandomSampler(data)

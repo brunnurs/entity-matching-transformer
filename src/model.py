@@ -4,10 +4,6 @@ import torch
 from pytorch_transformers.modeling_bert import BertForSequenceClassification, WEIGHTS_NAME, CONFIG_NAME
 
 
-def get_pretrained_model(model_path):
-    return BertForSequenceClassification.from_pretrained(model_path)
-
-
 def save_model(model, experiment_name, model_output_dir):
     output_path = os.path.join(model_output_dir, experiment_name)
     os.makedirs(output_path, exist_ok=True)

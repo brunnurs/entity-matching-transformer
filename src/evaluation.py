@@ -4,7 +4,6 @@ import numpy as np
 
 import torch
 from sklearn.metrics import classification_report, f1_score
-from torch.nn import CrossEntropyLoss
 from tqdm import tqdm
 
 from logging_customized import setup_logging
@@ -19,45 +18,50 @@ class Evaluation:
         self.n_labels = n_labels
         self.output_path = os.path.join(model_output_dir, experiment_name, "eval_results.txt")
 
-    def evaluate(self, model, device, epoch, ):
-        model.eval()
-        nb_eval_steps, eval_loss = 0, 0
+    def evaluate(self, model, device, epoch):
+        nb_eval_steps = 0
+        eval_loss = 0.0
+        predictions = None
+        labels = None
 
-        all_logits = np.empty([0, self.n_labels])
-        all_label_ids = np.empty(0)
-
-        for input_ids, input_mask, segment_ids, label_ids in tqdm(self.evaluation_data_loader, desc="Evaluating"):
-            input_ids = input_ids.to(device)
-            input_mask = input_mask.to(device)
-            segment_ids = segment_ids.to(device)
-            label_ids = label_ids.to(device)
+        for batch in tqdm(self.evaluation_data_loader, desc="Evaluating"):
+            model.eval()
+            batch = tuple(t.to(device) for t in batch)
 
             with torch.no_grad():
-                outputs = model(input_ids, segment_ids, input_mask, labels=None)
-                logits = outputs[0]  # logits are always part of the output (see BertForSequenceClassification documentation),
-                # while loss is only available if labels are provided. Therefore the logits are here to find on first position.
+                inputs = {'input_ids': batch[0],
+                          'attention_mask': batch[1],
+                          'token_type_ids': batch[2],
+                          'labels': batch[3]}
 
-                loss_fct = CrossEntropyLoss()
-                tmp_eval_loss = loss_fct(logits.view(-1, self.n_labels), label_ids.view(-1))
+                outputs = model(**inputs)
+                tmp_eval_loss, logits = outputs[:2]     # logits are always part of the output (see BertForSequenceClassification documentation),
+                                                        # while loss is only available if labels are provided. Therefore the logits are here to find on first position.
+
+                eval_loss += tmp_eval_loss.mean().item()
 
             eval_loss += tmp_eval_loss.mean().item()
             nb_eval_steps += 1
 
-            logits_numpy = logits.detach().cpu().numpy()
-            labels_numpy = label_ids.to('cpu').numpy()
-
-            all_logits = np.concatenate([all_logits, logits_numpy])
-            all_label_ids = np.concatenate([all_label_ids, labels_numpy])
+            if predictions is None:
+                predictions = logits.detach().cpu().numpy()
+                labels = inputs['labels'].detach().cpu().numpy()
+            else:
+                predictions = np.append(predictions, logits.detach().cpu().numpy(), axis=0)
+                labels = np.append(labels, inputs['labels'].detach().cpu().numpy(), axis=0)
 
         eval_loss = eval_loss / nb_eval_steps
 
         # remember, the logits are simply the output from the last layer, without applying an activation function (e.g. sigmoid).
         # for a simple classification this is also not necessary, we just take the index of the neuron with the maximal output.
-        predicted_class = np.argmax(all_logits, axis=1)
-        f1 = f1_score(all_label_ids, predicted_class)
-        report = classification_report(all_label_ids, predicted_class)
+        predicted_class = np.argmax(predictions, axis=1)
+
+        simple_accuracy = (predicted_class == labels).mean()
+        f1 = f1_score(y_true=labels, y_pred=predicted_class)
+        report = classification_report(labels, predicted_class)
 
         result = {'eval_loss': eval_loss,
+                  'simple_accuracy': simple_accuracy,
                   'f1_score': f1}
 
         with open(self.output_path, "a+") as writer:
