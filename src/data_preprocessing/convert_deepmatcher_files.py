@@ -58,6 +58,15 @@ def company_join(row: pd.Series):
     return row['content']
 
 
+def full_join_except_id(row: pd.Series):
+    single_text_blob = []
+    for index, row_value in row[1:].items():
+        if not row.isnull()[index]:
+            single_text_blob.append(str(row_value))  # make sure non-string values (e.g. prices as floats) get converted
+
+    return " ".join(single_text_blob)
+
+
 if __name__ == "__main__":
 
     if Config().DATA_DIR.endswith("abt_buy"):
@@ -97,3 +106,41 @@ if __name__ == "__main__":
                                       os.path.join(Config().DATA_DIR, "deep_matcher", "tableB.csv"),
                                       os.path.join(Config().DATA_DIR, "dev.tsv"),
                                       company_join, company_join)
+
+    if Config().DATA_DIR.endswith("dirty_amazon_itunes"):
+        convert_deepmatcher_structure(os.path.join(Config().DATA_DIR, "deep_matcher", "train.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableA.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableB.csv"),
+                                      os.path.join(Config().DATA_DIR, "train.tsv"),
+                                      full_join_except_id, full_join_except_id)
+
+        convert_deepmatcher_structure(os.path.join(Config().DATA_DIR, "deep_matcher", "test.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableA.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableB.csv"),
+                                      os.path.join(Config().DATA_DIR, "test.tsv"),
+                                      full_join_except_id, full_join_except_id)
+
+        convert_deepmatcher_structure(os.path.join(Config().DATA_DIR, "deep_matcher", "valid.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableA.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableB.csv"),
+                                      os.path.join(Config().DATA_DIR, "dev.tsv"),
+                                      full_join_except_id, full_join_except_id)
+
+    if Config().DATA_DIR.endswith("dirty_walmart_amazon"):
+        convert_deepmatcher_structure(os.path.join(Config().DATA_DIR, "deep_matcher", "train.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableA.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableB.csv"),
+                                      os.path.join(Config().DATA_DIR, "train.tsv"),
+                                      full_join_except_id, full_join_except_id)
+
+        convert_deepmatcher_structure(os.path.join(Config().DATA_DIR, "deep_matcher", "test.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableA.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableB.csv"),
+                                      os.path.join(Config().DATA_DIR, "test.tsv"),
+                                      full_join_except_id, full_join_except_id)
+
+        convert_deepmatcher_structure(os.path.join(Config().DATA_DIR, "deep_matcher", "valid.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableA.csv"),
+                                      os.path.join(Config().DATA_DIR, "deep_matcher", "tableB.csv"),
+                                      os.path.join(Config().DATA_DIR, "dev.tsv"),
+                                      full_join_except_id, full_join_except_id)
