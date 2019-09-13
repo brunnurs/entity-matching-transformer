@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     logging.info("training with {} labels: {}".format(len(label_list), label_list))
 
-    config = BertConfig.from_pretrained(Config().PRE_TRAINED_MODEL_BERT_BASE_UNCASED)
+    config = BertConfig.from_pretrained(Config().PRE_TRAINED_MODEL_BERT_BASE_UNCASED, finetuning_task=Config().MODEL_NAME.lower())
     tokenizer = BertTokenizer.from_pretrained(Config().PRE_TRAINED_MODEL_BERT_BASE_UNCASED, do_lower_case=Config().DO_LOWER_CASE)
     model = BertForSequenceClassification.from_pretrained(Config().PRE_TRAINED_MODEL_BERT_BASE_UNCASED, config=config)
 
@@ -57,7 +57,7 @@ if __name__ == "__main__":
     training_data_loader = load_data(train_examples, label_list, tokenizer, Config().MAX_SEQ_LENGTH, Config().TRAIN_BATCH_SIZE, DataType.TRAINING)
     logging.info("loaded {} training examples".format(len(train_examples)))
 
-    num_train_steps = len(training_data_loader) // Config().NUM_EPOCHS
+    num_train_steps = len(training_data_loader) * Config().NUM_EPOCHS
 
     optimizer, scheduler = build_optimizer(model, num_train_steps, Config().LEARNING_RATE, Config().ADAM_EPS, Config().WARMUP_STEPS, Config().WEIGHT_DECAY)
     logging.info("Built optimizer: {}".format(optimizer))

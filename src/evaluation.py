@@ -40,7 +40,6 @@ class Evaluation:
 
                 eval_loss += tmp_eval_loss.mean().item()
 
-            eval_loss += tmp_eval_loss.mean().item()
             nb_eval_steps += 1
 
             if predictions is None:
