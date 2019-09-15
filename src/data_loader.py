@@ -17,7 +17,7 @@ class DataType(Enum):
 
 
 def load_data(examples, label_list, tokenizer, max_seq_length, batch_size, data_type: DataType):
-    logging.info("***** Convert Data to Features (Word-Piece Tokenizing) *****".format(data_type))
+    logging.info("***** Convert Data to Features (Word-Piece Tokenizing) [{}] *****".format(data_type))
     features = convert_examples_to_features(examples,
                                             label_list,
                                             max_seq_length,
@@ -25,7 +25,7 @@ def load_data(examples, label_list, tokenizer, max_seq_length, batch_size, data_
                                             output_mode="classification",
                                             cls_token_segment_id=0)
 
-    logging.info("***** Load Data for {}*****".format(data_type))
+    logging.info("***** Build PyTorch DataLoader with extracted features [{}] *****".format(data_type))
     logging.info("  Num examples = %d", len(examples))
     logging.info("  Batch size = %d", batch_size)
     logging.info("  Max Sequence Length = %d", max_seq_length)
