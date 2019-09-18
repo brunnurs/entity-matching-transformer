@@ -24,16 +24,17 @@ class Singleton(object):
 
 
 class Config(Singleton):
-    DATA_DIR = "data/dirty_walmart_amazon"
+    DATA_DIR = "__please_config_me__"
     PRE_TRAINED_MODEL_DIR = "pre_trained_model"
     PRE_TRAINED_MODEL_BERT_BASE_UNCASED = os.path.join(PRE_TRAINED_MODEL_DIR, "bert-base-uncased")
     MODEL_OUTPUT_DIR = "experiments"
-    MODEL_NAME = "D_WALMART_AMAZON"
-    TRAINED_MODEL_FOR_PREDICTION = "SST2_1553095240"
+    MODEL_NAME = "__please_config_me__"
+    TRAINED_MODEL_FOR_PREDICTION = "__please_config_me__"
     MAX_SEQ_LENGTH = 128
     DO_LOWER_CASE = True
     TRAIN_BATCH_SIZE = 16
     EVAL_BATCH_SIZE = 16
+    TEST_BATCH_SIZE = 16
     LEARNING_RATE = 2e-5
     ADAM_EPS = 1e-8
     WARMUP_STEPS = 0
@@ -48,7 +49,7 @@ class Config(Singleton):
 
     @classmethod
     def dump_config_to_json_file(cls, experiment_name):
-        config_path = os.path.join(cls.MODEL_OUTPUT_DIR, experiment_name, "config.json")
+        config_path = os.path.join(cls.MODEL_OUTPUT_DIR, experiment_name, "cmd_args.json")
 
         with open(config_path, 'w') as outfile:
             outfile.write(jsons.dumps(Config()))
@@ -62,8 +63,10 @@ class Config(Singleton):
         parser.add_argument('--max_seq_length', action="store", dest="MAX_SEQ_LENGTH", type=int)
         parser.add_argument('--train_batch_size', action="store", dest="TRAIN_BATCH_SIZE", type=int)
         parser.add_argument('--eval_batch_size', action="store", dest="EVAL_BATCH_SIZE", type=int)
+        parser.add_argument('--test_batch_size', action="store", dest="TEST_BATCH_SIZE", type=int)
         parser.add_argument('--num_epochs', action="store", dest="NUM_EPOCHS", type=float)
         parser.add_argument('--data_processor', action="store", dest="DATA_PROCESSOR", type=str)
+        parser.add_argument('--trained_model_for_prediction', action="store", dest="TRAINED_MODEL_FOR_PREDICTION", type=str)
 
         results = parser.parse_args()
 

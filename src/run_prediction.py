@@ -1,41 +1,47 @@
 import logging
+import os
 
 from pytorch_transformers import BertTokenizer
-from sklearn.metrics import classification_report
 
 from config import Config
-from data_representation import DeepMatcherProcessor
+from data_representation import DeepMatcherProcessor, QqpProcessor
 from logging_customized import setup_logging
-from src.TorchInitializer import TorchInitializer
 from src.data_loader import load_data, DataType
-from src.model import load_saved_model
+from src.model import load_model
 from src.prediction import predict
+from torch_initializer import initialize_gpu_seed
 
 setup_logging()
 
 if __name__ == "__main__":
-    device, n_gpu = TorchInitializer().initialize_gpu_seed(Config().SEED)
+    Config().set_arguments_to_config()
 
-    processor = DeepMatcherProcessor()
-    label_list = processor.get_labels()
+    device, n_gpu = initialize_gpu_seed(Config().SEED)
 
-    logging.info("Predict with {} labels: {}".format(len(label_list), label_list))
-
-    tokenizer = BertTokenizer.from_pretrained(Config().PRE_TRAINED_MODEL_BERT_BASE_UNCASED,
-                                              do_lower_case=Config().DO_LOWER_CASE)
-
-    test_examples = processor.get_dev_examples(Config().DATA_DIR)
-    logging.info("loaded {} test examples (take care: we use the evaluation-data here as no labels for test are "
-                 "available!)".format(len(test_examples)))
-    test_data_loader = load_data(test_examples, label_list, tokenizer, Config().MAX_SEQ_LENGTH,
-                                 Config().EVAL_BATCH_SIZE, DataType.TEST)
-
-    model = load_saved_model(Config().TRAINED_MODEL_FOR_PREDICTION, Config().MODEL_OUTPUT_DIR, len(label_list))
+    model, tokenizer = load_model(os.path.join(Config().MODEL_OUTPUT_DIR, Config().TRAINED_MODEL_FOR_PREDICTION), Config().DO_LOWER_CASE)
     model.to(device)
 
-    prediction = predict(test_examples, test_data_loader, model, device)
-    print("Prediction done! Result-Shape: {}".format(prediction.shape))
+    if tokenizer:
+        logging.info("Loaded pretrained model and tokenizer from {}".format(Config().TRAINED_MODEL_FOR_PREDICTION))
+    else:
+        tokenizer = BertTokenizer.from_pretrained(Config().PRE_TRAINED_MODEL_BERT_BASE_UNCASED, do_lower_case=Config().DO_LOWER_CASE)
+        logging.info("Loaded pretrained model from {} but no fine-tuned tokenizer found, therefore use the standard tokenizer."
+                     .format(Config().TRAINED_MODEL_FOR_PREDICTION))
 
-    print(prediction[:10])
+    if Config().DATA_PROCESSOR == "QqpProcessor":
+        processor = QqpProcessor()
+    else:
+        # this is the default as it works for all data sets of the deepmatcher project.
+        processor = DeepMatcherProcessor()
 
-    print(classification_report(list(prediction['true_label']), list(prediction['predicted_label'])))
+    test_examples = processor.get_test_examples(Config().DATA_DIR)
+
+    logging.info("loaded {} test examples".format(len(test_examples)))
+    test_data_loader = load_data(test_examples, processor.get_labels(), tokenizer, Config().MAX_SEQ_LENGTH, Config().TEST_BATCH_SIZE, DataType.TEST)
+
+    simple_accuracy, f1, classification_report, predictions = predict(model, device, test_data_loader)
+    logging.info("Prediction done for {} examples.F1: {}, Simple Accuracy: {}".format(len(test_data_loader), f1, simple_accuracy))
+
+    logging.info(classification_report)
+
+    logging.info(predictions)

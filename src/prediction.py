@@ -1,37 +1,43 @@
 import numpy as np
 import pandas as pd
 import torch
+from sklearn.metrics import f1_score, classification_report
 from tqdm import tqdm
 
 
-def predict(original_test_data, test_data_loader, model, device):
+def predict(model, device, test_data_loader):
+    nb_prediction_steps = 0
+    predictions = None
+    labels = None
 
-    input_data = [{'id': test_example.guid,
-                   'sentence': test_example.text_a,
-                   'true_label': test_example.label} for test_example in original_test_data]
-
-    label_logit_pairs = []
-
-    model.eval()
-    nb_eval_steps, nb_eval_examples = 0, 0
-    for step, batch in enumerate(tqdm(test_data_loader, desc="Prediction Iteration")):
-        input_ids, input_mask, segment_ids, _ = batch
-        input_ids = input_ids.to(device)
-        input_mask = input_mask.to(device)
-        segment_ids = segment_ids.to(device)
+    for batch in tqdm(test_data_loader, desc="Test"):
+        model.eval()
+        batch = tuple(t.to(device) for t in batch)
 
         with torch.no_grad():
-            logits = model(input_ids, segment_ids, input_mask)
-            activated_output = logits.sigmoid()
+            inputs = {'input_ids': batch[0],
+                      'attention_mask': batch[1],
+                      'token_type_ids': batch[2],
+                      'labels': batch[3]}
 
-        logits = logits.detach().cpu().numpy()
-        predicted_labels = np.argmax(logits, axis=1)
-        max_activated_outputs = activated_output.detach().cpu().numpy()
+            outputs = model(**inputs)
+            _, logits = outputs[:2]
 
-        for l, a in zip(predicted_labels, max_activated_outputs):
-            label_logit_pairs.append({'predicted_label': l, 'probability': a[l]})
+        nb_prediction_steps += 1
 
-        nb_eval_examples += input_ids.size(0)
-        nb_eval_steps += 1
+        if predictions is None:
+            predictions = logits.detach().cpu().numpy()
+            labels = inputs['labels'].detach().cpu().numpy()
+        else:
+            predictions = np.append(predictions, logits.detach().cpu().numpy(), axis=0)
+            labels = np.append(labels, inputs['labels'].detach().cpu().numpy(), axis=0)
 
-    return pd.merge(pd.DataFrame(input_data), pd.DataFrame(label_logit_pairs), left_index=True, right_index=True)
+    # remember, the logits are simply the output from the last layer, without applying an activation function (e.g. sigmoid).
+    # for a simple classification this is also not necessary, we just take the index of the neuron with the maximal output.
+    predicted_class = np.argmax(predictions, axis=1)
+
+    simple_accuracy = (predicted_class == labels).mean()
+    f1 = f1_score(y_true=labels, y_pred=predicted_class)
+    report = classification_report(labels, predicted_class)
+
+    return simple_accuracy, f1, report, pd.DataFrame({'predictions': predicted_class, 'labels': labels})

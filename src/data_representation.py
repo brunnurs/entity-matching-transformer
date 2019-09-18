@@ -76,6 +76,12 @@ class QqpProcessor(DataProcessor):
         return self._create_examples(
             self._read_tsv(os.path.join(data_dir, "dev.tsv")), "dev")
 
+    def get_test_examples(self, data_dir):
+        # IMPORTANT: the QQP test-set contains no labels, therefore we use the dev-set as test set
+        return self._create_examples(
+            self._read_tsv(os.path.join(data_dir, "dev.tsv")), "dev")
+
+
     def get_labels(self):
         """See base class."""
         return ["0", "1"]
@@ -110,6 +116,11 @@ class DeepMatcherProcessor(DataProcessor):
         """See base class."""
         return self._create_examples(
             self._read_tsv(os.path.join(data_dir, "dev.tsv")), "dev")
+
+    def get_test_examples(self, data_dir):
+        """See base class."""
+        return self._create_examples(
+            self._read_tsv(os.path.join(data_dir, "test.tsv")), "test")
 
     def get_labels(self):
         """See base class."""
