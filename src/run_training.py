@@ -77,6 +77,7 @@ if __name__ == "__main__":
           evaluation,
           Config().NUM_EPOCHS,
           Config().MAX_GRAD_NORM,
+          Config().SAVE_MODEL_AFTER_EPOCH,
           experiment_name=exp_name,
           output_dir=Config().MODEL_OUTPUT_DIR)
 

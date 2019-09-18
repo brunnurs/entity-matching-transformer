@@ -11,7 +11,9 @@ from tensorboardX import SummaryWriter
 setup_logging()
 
 
-def train(device, train_dataloader, model, optimizer, scheduler, evaluation, num_epocs, max_grad_norm, experiment_name, output_dir):
+def train(device,
+          train_dataloader, model, optimizer, scheduler, evaluation, num_epocs, max_grad_norm,
+          save_model_after_epoch, experiment_name, output_dir):
     logging.info("***** Run training *****")
     tb_writer = SummaryWriter(os.path.join(output_dir, experiment_name))
 
@@ -51,6 +53,7 @@ def train(device, train_dataloader, model, optimizer, scheduler, evaluation, num
         for key, value in eval_results.items():
             tb_writer.add_scalar('eval_{}'.format(key), value, global_step)
 
-        save_model(model, experiment_name, output_dir, epoch=epoch)
+        if save_model_after_epoch:
+            save_model(model, experiment_name, output_dir, epoch=epoch)
 
     tb_writer.close()

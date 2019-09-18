@@ -47,6 +47,8 @@ class Config(Singleton):
 
     DATA_PROCESSOR = "DeepMatcherProcessor"
 
+    SAVE_MODEL_AFTER_EPOCH = False
+
     @classmethod
     def dump_config_to_json_file(cls, experiment_name):
         config_path = os.path.join(cls.MODEL_OUTPUT_DIR, experiment_name, "cmd_args.json")
@@ -67,6 +69,7 @@ class Config(Singleton):
         parser.add_argument('--num_epochs', action="store", dest="NUM_EPOCHS", type=float)
         parser.add_argument('--data_processor', action="store", dest="DATA_PROCESSOR", type=str)
         parser.add_argument('--trained_model_for_prediction', action="store", dest="TRAINED_MODEL_FOR_PREDICTION", type=str)
+        parser.add_argument('--save_model_after_epoch', action='store_true', dest="SAVE_MODEL_AFTER_EPOCH")
 
         results = parser.parse_args()
 
