@@ -5,12 +5,14 @@ from tqdm import tqdm, trange
 
 from logging_customized import setup_logging
 from model import save_model
+from tensorboardX import SummaryWriter
 
 setup_logging()
 
 
 def train(device, train_dataloader, model, optimizer, scheduler, evaluation, num_epocs, max_grad_norm, experiment_name, output_dir):
-    logging.info("***** Running training *****")
+    logging.info("***** Run training *****")
+    tb_writer = SummaryWriter()
 
     global_step = 0
     tr_loss, logging_loss = 0.0, 0.0
@@ -40,9 +42,14 @@ def train(device, train_dataloader, model, optimizer, scheduler, evaluation, num
 
             global_step += 1
 
-            # tqdm.write('lr: {}'.format(scheduler.get_lr()[0]))
-            # tqdm.write('loss: {}'.format(tr_loss - logging_loss))
+            tb_writer.add_scalar('lr', scheduler.get_lr()[0], global_step)
+            tb_writer.add_scalar('loss', (tr_loss - logging_loss), global_step)
             logging_loss = tr_loss
 
-        evaluation.evaluate(model, device, epoch)
+        eval_results = evaluation.evaluate(model, device, epoch)
+        for key, value in eval_results.items():
+            tb_writer.add_scalar('eval_{}'.format(key), value, global_step)
+
         save_model(model, experiment_name, output_dir, epoch=epoch)
+
+    tb_writer.close()

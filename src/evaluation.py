@@ -72,3 +72,5 @@ class Evaluation:
 
             tqdm.write(report)
             writer.write(report + "\n")
+
+        return result
