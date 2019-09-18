@@ -4,18 +4,19 @@ import torch
 from tqdm import tqdm, trange
 
 from logging_customized import setup_logging
+from model import save_model
 
 setup_logging()
 
 
-def train(device, train_dataloader, model, optimizer, scheduler, evaluation, num_epocs, max_grad_norm):
+def train(device, train_dataloader, model, optimizer, scheduler, evaluation, num_epocs, max_grad_norm, experiment_name, output_dir):
     logging.info("***** Running training *****")
 
     global_step = 0
     tr_loss, logging_loss = 0.0, 0.0
     model.zero_grad()
 
-    for i_ in trange(int(num_epocs), desc="Epoch"):
+    for epoch in trange(int(num_epocs), desc="Epoch"):
         for step, batch in enumerate(tqdm(train_dataloader, desc="Iteration")):
             model.train()
 
@@ -33,8 +34,8 @@ def train(device, train_dataloader, model, optimizer, scheduler, evaluation, num
 
             tr_loss += loss.item()
 
-            scheduler.step()  # Update learning rate schedule
             optimizer.step()
+            scheduler.step()  # Update learning rate schedule
             model.zero_grad()
 
             global_step += 1
@@ -43,4 +44,5 @@ def train(device, train_dataloader, model, optimizer, scheduler, evaluation, num
             # tqdm.write('loss: {}'.format(tr_loss - logging_loss))
             logging_loss = tr_loss
 
-        evaluation.evaluate(model, device, i_)
+        evaluation.evaluate(model, device, epoch)
+        save_model(model, experiment_name, output_dir, epoch=epoch)

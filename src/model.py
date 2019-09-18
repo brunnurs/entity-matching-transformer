@@ -1,28 +1,28 @@
 import os
-import torch
 
-from pytorch_transformers.modeling_bert import BertForSequenceClassification, WEIGHTS_NAME, CONFIG_NAME
+from pytorch_transformers import BertTokenizer
+from pytorch_transformers.modeling_bert import BertForSequenceClassification
 
 
-def save_model(model, experiment_name, model_output_dir):
-    output_path = os.path.join(model_output_dir, experiment_name)
-    os.makedirs(output_path, exist_ok=True)
+def save_model(model, experiment_name, model_output_dir, epoch=None, tokenizer=None):
+    if epoch:
+        output_sub_dir = os.path.join(model_output_dir, experiment_name, "epoch_{}".format(epoch))
+    else:
+        output_sub_dir = os.path.join(model_output_dir, experiment_name)
 
-    # Save a trained model and the associated configuration
+    os.makedirs(output_sub_dir, exist_ok=True)
+
     model_to_save = model.module if hasattr(model, 'module') else model  # Only save the model it-self
+    model_to_save.save_pretrained(output_sub_dir)
 
-    output_model_file = os.path.join(output_path, WEIGHTS_NAME)
-    torch.save(model_to_save.state_dict(), output_model_file)
-    output_config_file = os.path.join(output_path, CONFIG_NAME)
-    with open(output_config_file, 'w') as f:
-        f.write(model_to_save.config.to_json_string())
+    if tokenizer:
+        tokenizer.save_pretrained(output_sub_dir)
+
+    return output_sub_dir
 
 
-def load_saved_model(experiment_name, model_output_dir, num_labels, ):
-    saved_model_path = os.path.join(model_output_dir, experiment_name)
-    model_state_dict = torch.load(os.path.join(saved_model_path, WEIGHTS_NAME))
-    model = BertForSequenceClassification.from_pretrained(saved_model_path,
-                                                          num_labels=num_labels,
-                                                          state_dict=model_state_dict)
+def load_model(model_dir, do_lower_case):
+    model = BertForSequenceClassification.from_pretrained(model_dir)
+    tokenizer = BertTokenizer.from_pretrained(model_dir, do_lower_case=do_lower_case)
 
-    return model
+    return model, tokenizer

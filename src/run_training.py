@@ -1,6 +1,6 @@
 import logging
 import os
-import time
+from datetime import datetime
 
 from pytorch_transformers import BertTokenizer, BertConfig, BertForSequenceClassification
 
@@ -18,7 +18,8 @@ setup_logging()
 
 
 def create_experiment_folder():
-    timestamp = str(int(time.time()))
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
     experiment_name = "{}_{}".format(Config().MODEL_NAME, timestamp)
 
     output_path = os.path.join(Config().MODEL_OUTPUT_DIR, experiment_name)
@@ -68,7 +69,16 @@ if __name__ == "__main__":
     evaluation = Evaluation(evaluation_data_loader, exp_name, Config().MODEL_OUTPUT_DIR, len(label_list))
     logging.info("loaded and initialized evaluation examples {}".format(len(eval_examples)))
 
-    train(device, training_data_loader, model, optimizer, scheduler, evaluation, Config().NUM_EPOCHS, Config().MAX_GRAD_NORM)
+    train(device,
+          training_data_loader,
+          model,
+          optimizer,
+          scheduler,
+          evaluation,
+          Config().NUM_EPOCHS,
+          Config().MAX_GRAD_NORM,
+          experiment_name=exp_name,
+          output_dir=Config().MODEL_OUTPUT_DIR)
 
-    save_model(model, exp_name, Config().MODEL_OUTPUT_DIR)
+    save_model(model, exp_name, Config().MODEL_OUTPUT_DIR, tokenizer=tokenizer)
 
