@@ -1,4 +1,5 @@
 import logging
+import os
 
 import torch
 from tqdm import tqdm, trange
@@ -12,7 +13,7 @@ setup_logging()
 
 def train(device, train_dataloader, model, optimizer, scheduler, evaluation, num_epocs, max_grad_norm, experiment_name, output_dir):
     logging.info("***** Run training *****")
-    tb_writer = SummaryWriter()
+    tb_writer = SummaryWriter(os.path.join(output_dir, experiment_name))
 
     global_step = 0
     tr_loss, logging_loss = 0.0, 0.0
