@@ -23,6 +23,6 @@ def write_first_n_lines_of_file(path_src, path_dest, n_lines):
 
 
 if __name__ == "__main__":
-    write_first_n_lines_of_file("data/dirty_walmart_amazon/train.large.tsv", "data/dirty_walmart_amazon/train.tsv", 10)
-    write_first_n_lines_of_file("data/dirty_walmart_amazon/test.large.tsv", "data/dirty_walmart_amazon/test.tsv", 10)
-    write_first_n_lines_of_file("data/dirty_walmart_amazon/dev.large.tsv", "data/dirty_walmart_amazon/dev.tsv", 10)
+    write_first_n_lines_of_file("data/dirty_dblp_scholar/train.large.tsv", "data/dirty_dblp_scholar/train.tsv", 100)
+    write_first_n_lines_of_file("data/dirty_dblp_scholar/test.large.tsv", "data/dirty_dblp_scholar/test.tsv", 100)
+    write_first_n_lines_of_file("data/dirty_dblp_scholar/dev.large.tsv", "data/dirty_dblp_scholar/dev.tsv", 100)

@@ -1,14 +1,12 @@
 import argparse
 import csv
-import os
-
-import pandas as pd
 import logging
-
+import os
 from typing import Callable
 
+import pandas as pd
+
 import constants as C
-from config import Config
 from logging_customized import setup_logging
 
 setup_logging()
