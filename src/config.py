@@ -23,30 +23,6 @@ class Config():
         'roberta': (RobertaConfig, RobertaForSequenceClassification, RobertaTokenizer),
     }
 
-    # PRE_TRAINED_MODEL_DIR = "pre_trained_model"
-    # PRE_TRAINED_MODEL_BERT_BASE_UNCASED = os.path.join(PRE_TRAINED_MODEL_DIR, "bert-base-uncased")
-    # MODEL_OUTPUT_DIR = "experiments"
-    # MODEL_NAME = "__please_config_me__"
-    # TRAINED_MODEL_FOR_PREDICTION = "__please_config_me__"
-    # MAX_SEQ_LENGTH = 128
-    # DO_LOWER_CASE = True
-    # TRAIN_BATCH_SIZE = 16
-    # EVAL_BATCH_SIZE = 16
-    # TEST_BATCH_SIZE = 16
-    # LEARNING_RATE = 2e-5
-    # ADAM_EPS = 1e-8
-    # WARMUP_STEPS = 0
-    # MAX_GRAD_NORM = 1.0
-    # WEIGHT_DECAY = 0.0
-    #
-    # NUM_EPOCHS = 30.0
-    # SEED = 42
-    # LOSS_SCALE = 128
-    #
-    # DATA_PROCESSOR = "DeepMatcherProcessor"
-    #
-    # SAVE_MODEL_AFTER_EPOCH = False
-
 
 def write_config_to_file(args, model_output_dir: str, experiment_name: str):
     config_path = os.path.join(model_output_dir, experiment_name, "args.json")
