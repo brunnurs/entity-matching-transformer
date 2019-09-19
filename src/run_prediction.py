@@ -3,7 +3,7 @@ import os
 
 from pytorch_transformers import BertTokenizer
 
-from config import read_arguments
+from config import read_arguments_train, read_arguments_prediction
 from data_representation import DeepMatcherProcessor, QqpProcessor
 from logging_customized import setup_logging
 from src.data_loader import load_data, DataType
@@ -14,7 +14,7 @@ from torch_initializer import initialize_gpu_seed
 setup_logging()
 
 if __name__ == "__main__":
-    args = read_arguments()
+    args = read_arguments_prediction()
 
     device, n_gpu = initialize_gpu_seed(args.seed)
 

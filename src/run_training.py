@@ -4,7 +4,7 @@ from datetime import datetime
 
 from pytorch_transformers import BertTokenizer, BertConfig, BertForSequenceClassification
 
-from config import read_arguments, write_config_to_file
+from config import read_arguments_train, write_config_to_file
 from logging_customized import setup_logging
 from src.data_loader import load_data, DataType
 from src.data_representation import DeepMatcherProcessor, QqpProcessor
@@ -29,7 +29,7 @@ def create_experiment_folder(model_output_dir: str, model_type: str, data_dir: s
 
 
 if __name__ == "__main__":
-    args = read_arguments()
+    args = read_arguments_train()
 
     exp_name = create_experiment_folder(args.model_output_dir, args.model_type, args.data_dir)
 
