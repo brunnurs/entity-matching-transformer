@@ -4,7 +4,7 @@ from datetime import datetime
 
 from pytorch_transformers import BertTokenizer, BertConfig, BertForSequenceClassification
 
-from config import Config
+from config import read_arguments, write_config_to_file
 from logging_customized import setup_logging
 from src.data_loader import load_data, DataType
 from src.data_representation import DeepMatcherProcessor, QqpProcessor
@@ -17,27 +17,27 @@ from training import train
 setup_logging()
 
 
-def create_experiment_folder():
+def create_experiment_folder(model_output_dir: str, model_type: str, data_dir: str):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    experiment_name = "{}_{}".format(Config().MODEL_NAME, timestamp)
+    experiment_name = "{}__{}__{}".format(data_dir.upper(), model_type.upper(), timestamp)
 
-    output_path = os.path.join(Config().MODEL_OUTPUT_DIR, experiment_name)
+    output_path = os.path.join(model_output_dir, experiment_name)
     os.makedirs(output_path, exist_ok=True)
 
     return experiment_name
 
 
 if __name__ == "__main__":
-    Config().set_arguments_to_config()
+    args = read_arguments()
 
-    exp_name = create_experiment_folder()
+    exp_name = create_experiment_folder(args.model_output_dir, args.model_type, args.data_dir)
 
-    Config().dump_config_to_json_file(exp_name)
+    write_config_to_file(args, args.model_output_dir, exp_name)
 
-    device, n_gpu = initialize_gpu_seed(Config().SEED)
+    device, n_gpu = initialize_gpu_seed(args.seed)
 
-    if Config().DATA_PROCESSOR == "QqpProcessor":
+    if args.data_processor == "QqpProcessor":
         processor = QqpProcessor()
     else:
         # this is the default as it works for all data sets of the deepmatcher project.
@@ -47,26 +47,41 @@ if __name__ == "__main__":
 
     logging.info("training with {} labels: {}".format(len(label_list), label_list))
 
-    config = BertConfig.from_pretrained(Config().PRE_TRAINED_MODEL_BERT_BASE_UNCASED, finetuning_task=Config().MODEL_NAME.lower())
-    tokenizer = BertTokenizer.from_pretrained(Config().PRE_TRAINED_MODEL_BERT_BASE_UNCASED, do_lower_case=Config().DO_LOWER_CASE)
-    model = BertForSequenceClassification.from_pretrained(Config().PRE_TRAINED_MODEL_BERT_BASE_UNCASED, config=config)
+    config = BertConfig.from_pretrained(args.model_name_or_path)
+    tokenizer = BertTokenizer.from_pretrained(args.model_name_or_path, do_lower_case=args.do_lower_case)
+    model = BertForSequenceClassification.from_pretrained(args.model_name_or_path, config=config)
 
     model.to(device)
     logging.info("initialized BERT-model")
 
-    train_examples = processor.get_train_examples(Config().DATA_DIR)
-    training_data_loader = load_data(train_examples, label_list, tokenizer, Config().MAX_SEQ_LENGTH, Config().TRAIN_BATCH_SIZE, DataType.TRAINING)
+    train_examples = processor.get_train_examples(args.data_path)
+    training_data_loader = load_data(train_examples,
+                                     label_list,
+                                     tokenizer,
+                                     args.max_seq_length,
+                                     args.train_batch_size,
+                                     DataType.TRAINING)
     logging.info("loaded {} training examples".format(len(train_examples)))
 
-    num_train_steps = len(training_data_loader) * Config().NUM_EPOCHS
+    num_train_steps = len(training_data_loader) * args.num_epochs
 
-    optimizer, scheduler = build_optimizer(model, num_train_steps, Config().LEARNING_RATE, Config().ADAM_EPS, Config().WARMUP_STEPS, Config().WEIGHT_DECAY)
+    optimizer, scheduler = build_optimizer(model,
+                                           num_train_steps,
+                                           args.learning_rate,
+                                           args.adam_eps,
+                                           args.warmup_steps,
+                                           args.weight_decay)
     logging.info("Built optimizer: {}".format(optimizer))
 
-    eval_examples = processor.get_dev_examples(Config().DATA_DIR)
-    evaluation_data_loader = load_data(eval_examples, label_list, tokenizer, Config().MAX_SEQ_LENGTH, Config().EVAL_BATCH_SIZE, DataType.EVALUATION)
+    eval_examples = processor.get_dev_examples(args.data_path)
+    evaluation_data_loader = load_data(eval_examples,
+                                       label_list,
+                                       tokenizer,
+                                       args.max_seq_length,
+                                       args.eval_batch_size,
+                                       DataType.EVALUATION)
 
-    evaluation = Evaluation(evaluation_data_loader, exp_name, Config().MODEL_OUTPUT_DIR, len(label_list))
+    evaluation = Evaluation(evaluation_data_loader, exp_name, args.model_output_dir, len(label_list))
     logging.info("loaded and initialized evaluation examples {}".format(len(eval_examples)))
 
     train(device,
@@ -75,11 +90,10 @@ if __name__ == "__main__":
           optimizer,
           scheduler,
           evaluation,
-          Config().NUM_EPOCHS,
-          Config().MAX_GRAD_NORM,
-          Config().SAVE_MODEL_AFTER_EPOCH,
+          args.num_epochs,
+          args.max_grad_norm,
+          args.save_model_after_epoch,
           experiment_name=exp_name,
-          output_dir=Config().MODEL_OUTPUT_DIR)
+          output_dir=args.model_output_dir)
 
-    save_model(model, exp_name, Config().MODEL_OUTPUT_DIR, tokenizer=tokenizer)
-
+    save_model(model, exp_name, args.model_output_dir, tokenizer=tokenizer)
