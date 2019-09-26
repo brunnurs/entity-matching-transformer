@@ -12,8 +12,17 @@ setup_logging()
 
 
 def train(device,
-          train_dataloader, model, optimizer, scheduler, evaluation, num_epocs, max_grad_norm,
-          save_model_after_epoch, experiment_name, output_dir):
+          train_dataloader,
+          model,
+          optimizer,
+          scheduler,
+          evaluation,
+          num_epocs,
+          max_grad_norm,
+          save_model_after_epoch,
+          experiment_name,
+          output_dir,
+          model_type):
     logging.info("***** Run training *****")
     tb_writer = SummaryWriter(os.path.join(output_dir, experiment_name))
 
@@ -28,7 +37,7 @@ def train(device,
             batch = tuple(t.to(device) for t in batch)
             inputs = {'input_ids': batch[0],
                       'attention_mask': batch[1],
-                      'token_type_ids': batch[2],
+                      'token_type_ids': batch[2] if model_type in ['bert', 'xlnet'] else None,  # XLM don't use segment_ids
                       'labels': batch[3]}
 
             outputs = model(**inputs)

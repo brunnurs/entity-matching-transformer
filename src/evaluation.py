@@ -13,7 +13,8 @@ setup_logging()
 
 class Evaluation:
 
-    def __init__(self, evaluation_data_loader, experiment_name, model_output_dir, n_labels):
+    def __init__(self, evaluation_data_loader, experiment_name, model_output_dir, n_labels, model_type):
+        self.model_type = model_type
         self.evaluation_data_loader = evaluation_data_loader
         self.n_labels = n_labels
         self.output_path = os.path.join(model_output_dir, experiment_name, "eval_results.txt")
@@ -31,7 +32,7 @@ class Evaluation:
             with torch.no_grad():
                 inputs = {'input_ids': batch[0],
                           'attention_mask': batch[1],
-                          'token_type_ids': batch[2],
+                          'token_type_ids': batch[2] if self.model_type in ['bert', 'xlnet'] else None,  # XLM and RoBERTa don't use segment_ids
                           'labels': batch[3]}
 
                 outputs = model(**inputs)
