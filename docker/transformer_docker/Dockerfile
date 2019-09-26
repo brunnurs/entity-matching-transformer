@@ -1,6 +1,7 @@
 FROM pytorch/pytorch:latest
 
-RUN pip install pytorch-transformers
+RUN pip install torch==1.2.0
+RUN pip install pytorch-transformers==1.2.0
 RUN pip install pandas
 RUN pip install scikit-learn
 RUN pip install imbalanced-learn
