@@ -30,6 +30,11 @@ def train(device,
     tr_loss, logging_loss = 0.0, 0.0
     model.zero_grad()
 
+    # we are interested in 0 shot learning, therefore we already evaluate before training.
+    eval_results = evaluation.evaluate(model, device, -1)
+    for key, value in eval_results.items():
+        tb_writer.add_scalar('eval_{}'.format(key), value, global_step)
+
     for epoch in trange(int(num_epocs), desc="Epoch"):
         for step, batch in enumerate(tqdm(train_dataloader, desc="Iteration")):
             model.train()
