@@ -5,7 +5,8 @@ import logging
 
 from pytorch_transformers import BertConfig, BertForSequenceClassification, BertTokenizer, XLNetTokenizer, \
     XLNetForSequenceClassification, XLNetConfig, XLMForSequenceClassification, XLMConfig, XLMTokenizer, \
-    RobertaTokenizer, RobertaForSequenceClassification, RobertaConfig
+    RobertaTokenizer, RobertaForSequenceClassification, RobertaConfig, DistilBertConfig, \
+    DistilBertForSequenceClassification, DistilBertTokenizer
 
 from logging_customized import setup_logging
 
@@ -21,6 +22,7 @@ class Config():
         'xlnet': (XLNetConfig, XLNetForSequenceClassification, XLNetTokenizer),
         'xlm': (XLMConfig, XLMForSequenceClassification, XLMTokenizer),
         'roberta': (RobertaConfig, RobertaForSequenceClassification, RobertaTokenizer),
+        'distilbert': (DistilBertConfig, DistilBertForSequenceClassification, DistilBertTokenizer),
     }
 
 
