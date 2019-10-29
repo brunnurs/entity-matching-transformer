@@ -188,3 +188,22 @@ if __name__ == "__main__":
                                       os.path.join(args.data_dir, "deep_matcher", "tableB.csv"),
                                       os.path.join(args.data_dir, "dev.tsv"),
                                       full_join_except_id, full_join_except_id)
+
+    if args.data_dir.endswith("amazon_google"):
+        convert_deepmatcher_structure(os.path.join(args.data_dir, "deep_matcher", "train.csv"),
+                                      os.path.join(args.data_dir, "deep_matcher", "tableA.csv"),
+                                      os.path.join(args.data_dir, "deep_matcher", "tableB.csv"),
+                                      os.path.join(args.data_dir, "train.tsv"),
+                                      full_join_except_id, full_join_except_id)
+
+        convert_deepmatcher_structure(os.path.join(args.data_dir, "deep_matcher", "test.csv"),
+                                      os.path.join(args.data_dir, "deep_matcher", "tableA.csv"),
+                                      os.path.join(args.data_dir, "deep_matcher", "tableB.csv"),
+                                      os.path.join(args.data_dir, "test.tsv"),
+                                      full_join_except_id, full_join_except_id)
+
+        convert_deepmatcher_structure(os.path.join(args.data_dir, "deep_matcher", "valid.csv"),
+                                      os.path.join(args.data_dir, "deep_matcher", "tableA.csv"),
+                                      os.path.join(args.data_dir, "deep_matcher", "tableB.csv"),
+                                      os.path.join(args.data_dir, "dev.tsv"),
+                                      full_join_except_id, full_join_except_id)
