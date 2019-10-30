@@ -46,6 +46,9 @@ def write_to_output_in_paper_format(averaged: DataFrame):
         print('({},{})'.format(idx, average_value))
 
     print('Max value is: {}'.format(averaged['Mean'].max()))
+    # how to visualize the mean values in an easy way:
+    # (1) open averaged series in SciView.
+    # (2) remove the first values, which will make the color-scheme useless: averaged[1:].Mean
 
 
 def write_in_tensorboard_format(averaged: DataFrame, output_dir: str):
