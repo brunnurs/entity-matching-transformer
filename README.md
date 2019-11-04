@@ -1,5 +1,4 @@
-## Binary Classification with BERT
+## Entity Matching with Transformer Architectures - A Step Forward in Data Integration
 
-Based on the implementation of https://github.com/huggingface/pytorch-pretrained-BERT/blob/master/examples/run_classifier.py, but stripped down to the minimum and working only for the SST-2 dataset. Also refactored to understand different parts more easily.
-
-Many thanks for the good work @huggingface!
+To reproduce the experiments in the paper simply run the ```run_all.sh``` file. You might have to slightly adapt the file paths, depending on
+the location of your project.
