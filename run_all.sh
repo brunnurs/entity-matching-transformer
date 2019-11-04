@@ -11,7 +11,7 @@ cecho(){
     printf "${!1}${2} ${NC}\n"
 }
 
-SEED=11
+SEED=22
 
 # xlnet
 cecho "YELLOW" "Start dirty_amazon_itunes xlnet"
@@ -47,21 +47,21 @@ cecho "YELLOW" "Start dirty_dblp_scholar roBERTa"
 python ~/PA2/src/run_training.py --model_type=roberta --model_name_or_path=roberta-base --data_processor=DeepMatcherProcessor --data_dir=dirty_dblp_scholar --train_batch_size=16 --eval_batch_size=16 --max_seq_length=128 --num_epochs=15.0 --seed=${SEED}
 
 
- XLM
-cecho "YELLOW" "Start dirty_amazon_itunes XLM"
-python ~/PA2/src/run_training.py --model_type=xlm --model_name_or_path=xlm-mlm-ende-1024 --data_processor=DeepMatcherProcessor --data_dir=dirty_amazon_itunes --train_batch_size=16 --eval_batch_size=16 --max_seq_length=180 --num_epochs=15.0 --seed=${SEED}
-
-cecho "YELLOW" "Start abt_buy XLM"
-python ~/PA2/src/run_training.py --model_type=xlm --model_name_or_path=xlm-mlm-ende-1024 --data_processor=DeepMatcherProcessor --data_dir=abt_buy --train_batch_size=16 --eval_batch_size=16 --max_seq_length=265 --num_epochs=15.0 --seed=${SEED}
-
-cecho "YELLOW" "Start dirty_walmart_amazon XLM"
-python ~/PA2/src/run_training.py --model_type=xlm --model_name_or_path=xlm-mlm-ende-1024 --data_processor=DeepMatcherProcessor --data_dir=dirty_walmart_amazon --train_batch_size=16 --eval_batch_size=16 --max_seq_length=150 --num_epochs=15.0 --seed=${SEED}
-
-cecho "YELLOW" "Start dirty_dblp_acm XLM"
-python ~/PA2/src/run_training.py --model_type=xlm --model_name_or_path=xlm-mlm-ende-1024 --data_processor=DeepMatcherProcessor --data_dir=dirty_dblp_acm --train_batch_size=16 --eval_batch_size=16 --max_seq_length=180 --num_epochs=15.0 --seed=${SEED}
-
-cecho "YELLOW" "Start dirty_dblp_scholar XLM"
-python ~/PA2/src/run_training.py --model_type=xlm --model_name_or_path=xlm-mlm-ende-1024 --data_processor=DeepMatcherProcessor --data_dir=dirty_dblp_scholar --train_batch_size=16 --eval_batch_size=16 --max_seq_length=128 --num_epochs=15.0 --seed=${SEED}
+##XLM
+#cecho "YELLOW" "Start dirty_amazon_itunes XLM"
+#python ~/PA2/src/run_training.py --model_type=xlm --model_name_or_path=xlm-mlm-ende-1024 --data_processor=DeepMatcherProcessor --data_dir=dirty_amazon_itunes --train_batch_size=16 --eval_batch_size=16 --max_seq_length=180 --num_epochs=15.0 --seed=${SEED}
+#
+#cecho "YELLOW" "Start abt_buy XLM"
+#python ~/PA2/src/run_training.py --model_type=xlm --model_name_or_path=xlm-mlm-ende-1024 --data_processor=DeepMatcherProcessor --data_dir=abt_buy --train_batch_size=16 --eval_batch_size=16 --max_seq_length=265 --num_epochs=15.0 --seed=${SEED}
+#
+#cecho "YELLOW" "Start dirty_walmart_amazon XLM"
+#python ~/PA2/src/run_training.py --model_type=xlm --model_name_or_path=xlm-mlm-ende-1024 --data_processor=DeepMatcherProcessor --data_dir=dirty_walmart_amazon --train_batch_size=16 --eval_batch_size=16 --max_seq_length=150 --num_epochs=15.0 --seed=${SEED}
+#
+#cecho "YELLOW" "Start dirty_dblp_acm XLM"
+#python ~/PA2/src/run_training.py --model_type=xlm --model_name_or_path=xlm-mlm-ende-1024 --data_processor=DeepMatcherProcessor --data_dir=dirty_dblp_acm --train_batch_size=16 --eval_batch_size=16 --max_seq_length=180 --num_epochs=15.0 --seed=${SEED}
+#
+#cecho "YELLOW" "Start dirty_dblp_scholar XLM"
+#python ~/PA2/src/run_training.py --model_type=xlm --model_name_or_path=xlm-mlm-ende-1024 --data_processor=DeepMatcherProcessor --data_dir=dirty_dblp_scholar --train_batch_size=16 --eval_batch_size=16 --max_seq_length=128 --num_epochs=15.0 --seed=${SEED}
 
 
 # BERT

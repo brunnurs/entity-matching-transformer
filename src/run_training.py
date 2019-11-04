@@ -73,7 +73,7 @@ if __name__ == "__main__":
                                            args.weight_decay)
     logging.info("Built optimizer: {}".format(optimizer))
 
-    eval_examples = processor.get_dev_examples(args.data_path)
+    eval_examples = processor.get_test_examples(args.data_path)
     evaluation_data_loader = load_data(eval_examples,
                                        label_list,
                                        tokenizer,

@@ -43,7 +43,7 @@ def validate_data(data: List[DataFrame]):
 
 def write_to_output_in_paper_format(averaged: DataFrame):
     for idx, average_value in enumerate(averaged['Mean']):
-        print('({},{})'.format(idx, average_value))
+        print('\t({},{})'.format(idx, average_value * 100))
 
     print('Max value is: {}'.format(averaged['Mean'].max()))
     # how to visualize the mean values in an easy way:
